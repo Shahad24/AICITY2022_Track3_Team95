@@ -122,9 +122,9 @@ def perform_test(test_loader, model, test_meter, cfg, writer=None):
         #print("features", len(features)) 
         #print("preds", len(preds))
         #print("video_idx", video_idx)
-        np.savez("/workspace/slowfast/data/8/thir/P_{:05d}.npz".format((int(video_idx)+1)), probabilities)
+        np.savez("/workspace/Downloads/AICITY2022_Track3_Team95-main/slowfast_Inference/result/2/P_{:05d}.npz".format((int(video_idx)+1)), probabilities)
         4
-        np.savez("/workspace/slowfast/data/8/thir/F_{:05d}.npz".format((int(video_idx)+1)), features)
+        np.savez("/workspace/Downloads/AICITY2022_Track3_Team95-main/slowfast_Inference/result/2/F_{:05d}.npz".format((int(video_idx)+1)), features)
         print("feature and probabilities has been saved for video", str(int(video_idx)))
         # test_meter.iter_toc()
         # # Update and log stats.
