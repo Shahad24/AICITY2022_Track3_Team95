@@ -217,7 +217,7 @@ if __name__ == "__main__":
     parser.add_argument('--out_file', metavar='path', required=True,
                         help='the path where the tracked driver videos will be saved ..')
     args = parser.parse_args()
-    videos_path = glob.glob(args.vid_path+'/*/*')
+    videos_path = glob.glob(args.vid_path+'/*')
     out_file = args.out_file+'/'
     
     
