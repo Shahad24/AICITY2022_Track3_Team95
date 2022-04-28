@@ -23,18 +23,18 @@ The proposed framework achieves an **F1 score** of **27.06%** on Track 3, **A2 d
 
 The code has been tested with the following hardware and software specifications: <br />
   -	Ubuntu 20.04 and 18.04.
-  -	Intel Xeon xxxx.
-  -	2 GPUs Geforce RTX xxxx with xxxx GB memory. 
-  -	Driver version xxxxx.
-  -	Docker version xxxxx.  
-  -	Cuda xxxx and cudnn xxxx.
-
+  -	Intel(R) Xeon(R) W-2295 CPU @ 3.00GHz. 
+  -	-	2 GPUs Geforce RTX 2080 Ti with 11 GB memory. 
+  -	Docker version 20.10.12
+  -	Cuda 10.2 and cudnn 7.
+  -	Driver Version 495.29.05
 ## Installation (basic)
 
-This installation step is needed for both [Training](https://github.com/Shahad24/AICITY2022_Track3_Team95/tree/main/slowfast_train) and [Inference](https://github.com/Shahad24/AICITY2022_Track3_Team95/tree/main/slowfast_Inference) steps.
+This installation step is needed for both Training and Inference steps.
 
-  1. Pull the image and create container for Pytorch 1.8.1, cuda xxxx and cudnn xxxx
+  1. Pull the image and create container for Pytorch 1.8.1, cuda 10.2 and cudnn 7.
   ```bash
+  sudo docker pull 8feef0e83aed
   sudo docker run -it --rm --gpus all --shm-size=40g --name pytorch -v 'your home path':/workspace 8feef0e83aed 
   ```   
   2. Install the following dependencies inside the docker container
@@ -58,14 +58,15 @@ This installation step is needed for both [Training](https://github.com/Shahad24
 The workflow for training action classification model is as follow:
   1. Dataset preparation <br/>
     - **Trimming Videos** the input videos should be a trimmed videos i.e., contains only one action in each video. <br/>
-    - **Driver Tracking (pendding)** to detect and track driver spatial location in the video, then crop each video based on the driver bounding box. <br/>
+    - **Driver Tracking** (pendding) to detect and track driver spatial location in the video, then crop each video based on the driver bounding box. <br/>
     - **Image Colorization** to increase the size of the dataset, we use one of the synthetic data generation techniques. <br/>
     - **Prepare csv Files** for the training and validation sets.
-  2. Download checkpoints from [google drive here]() 
+  2. Download checkpoints from [google drive here](https://drive.google.com/drive/folders/1tN4aTWhPcCjnHzIvaVOjxVsYGfB13L0L?usp=sharing)
   3. Prepare the configuration file and start training.
 
 **Important Note:** <br />
-Since we clean dataset manually to reproduce near same action classification model, you can download the processed data from the google drive link that we sent via email (note this only for authorized people from organizer of AI city challenge). Then you can start from preparing csv files for the training<br />
+We clean the dataset manually. However, to reproduce nearly same action classification model you can download the processed data from the google drive link that we sent via email (note this only for authorized people from organizer of AI city challenge). Then you can start from preparing csv files for the training.<br />
+
 
 
   ### Driver Tracking (pendding) 
@@ -86,7 +87,7 @@ Since we clean dataset manually to reproduce near same action classification mod
     
   ---
   ### Training
-  Since action recognition method is data hungry and we only have few samples per class. We have to stages to get the final action classification model.<br />
+  Since action recognition method is data hungry and we only have few samples per class. We have two stages to get the final action classification model.<br />
   1. In the first stage, we train action classification model using only the Infrared video without the synthetic data.  
   2. In the second stage, we resume training the first stage model but after adding the colored data samples in the train and test csv files.
 
@@ -110,11 +111,11 @@ Since we clean dataset manually to reproduce near same action classification mod
   
   #### First stage 
 
-  - You need to download “SLOWFAST_8x8_R50.pkl” form [here](https://drive.google.com/drive/folders/1tN4aTWhPcCjnHzIvaVOjxVsYGfB13L0L?usp=sharing)a kinetics 400 dataset pretrained model and move the file to “slowfast_train/checkpoints/SLOWFAST_8x8_R50.pkl”.  <br />
+  - You need to download “SLOWFAST_8x8_R50.pkl” form [here](https://drive.google.com/drive/folders/1tN4aTWhPcCjnHzIvaVOjxVsYGfB13L0L?usp=sharing) a kinetics 400 dataset pretrained model and move the file to “slowfast_train/checkpoints/SLOWFAST_8x8_R50.pkl”.  <br />
   - Use “slowfast_train/configs/Kinetics/SLOWFAST_8x8_R50_config1.yaml” config file and add the checkpoint path if needed. <br />
   - Run the following command 
   ```bash
-  python tools/run_net.py --cfg configs/Kinetics/SLOWFAST_8x8_R5ـconfig1.yaml DATA.PATH_TO_DATA_DIR “specify the path to the CSV files”
+  python tools/run_net.py --cfg configs/Kinetics/SLOWFAST_8x8_R5ـconfig1.yaml DATA.PATH_TO_DATA_DIR 'specify the path to the CSV files'
   ```  
   
   #### Second stage 
@@ -123,7 +124,7 @@ Since we clean dataset manually to reproduce near same action classification mod
   - Use  “slowfast_train/configs/Kinetics/SLOWFAST_8x8_R50_config2.yaml” config file and add the checkpoint path if needed. <br />
   - Run the following command 
   ```bash
-  python tools/run_net.py --cfg configs/Kinetics/SLOWFAST_8x8_R5ـconfig2.yaml DATA.PATH_TO_DATA_DIR “specify the path to the CSV files”
+  python tools/run_net.py --cfg configs/Kinetics/SLOWFAST_8x8_R5ـconfig2.yaml DATA.PATH_TO_DATA_DIR 'specify the path to the CSV files'
   ```  
  ---
 ## Inference 
@@ -147,13 +148,24 @@ To use TDAL framework and produce the same result in the leaderboard you need to
   pip install -r requirements.txt
   apt-get update && apt-get upgrade -y && apt-get update && apt install libgl1-mesa-glx -y && apt-get install libglib2.0-0 -y
   ```   
-  2. Run the following command after specifying the videos path directory
+  2. 2-	Run the following command after specifying the videos path directory “--vid_path”.
   ```bash
   python yolov5/driver_tracking.py --vid_path 'specify videos path based on the workspace'  --out_file 'specify the path of output videos based on the workspace'
   ```   
+  the videos path directory should be as following structure:
+  - vid_path 
+    > Video_1.mp4 <br/>
+    > Video_2.mp4 <br/>
   ### Video Segmentation 
-
-
+  The following command takes untrimmed video as input and generate equal-length clips. To produce the same result in the leaderboard you should use the segmentation type 1 --segmentation_type settings. Type one setting will divide the untrimmed video into (video length in second/2) clips.
+  ```bash
+  python videoSegmentation.py --file_paths_video 'path to the root of folders that contains videos' --out_file 'specify the output path' --segmentation_type 1
+  ```   
+  the videos path directory should be as following structure:
+  - file_paths_video  
+    > Video_1.mp4 <br/>
+    > Video_2.mp4 <br/>
+  
   ### Prepare csv file
 
 ---
