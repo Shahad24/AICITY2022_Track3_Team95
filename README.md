@@ -9,7 +9,7 @@ For reproducibility, you must use all the code provided in this repo. Using any 
 Temporal driver action localization (TDAL) framework aims to classify driver distraction actions to 18 classes, as well as identifying the start and end time of a given driver action. The TDAL framework consists of three stages: 
 **Preprocessing**, , which takes untrimmed video as input and generates multiple clips; **Action Classification**, which classifies the clips; and finally, the classifier output is sent to the **Temporal Action Localization** to generate the start and end times of the distracted actions. <br />
 <br />
-The proposed framework achieves an **F1 score** of **27.06%** on Track 3, **A2 dataset** of NVIDIA AI City 2022 Challenge. Our paper will be available soon in CVPR workshops 2022. 
+The proposed framework achieves an **F1 score** of **27.06%** on [Track 3, **A2 dataset**](https://arxiv.org/abs/2204.08096) of NVIDIA AI City 2022 Challenge. Our paper will be available soon in CVPR workshops 2022. 
 
 ## Framework 
 
@@ -24,10 +24,10 @@ The proposed framework achieves an **F1 score** of **27.06%** on Track 3, **A2 d
 The code has been tested with the following hardware and software specifications: <br />
   -	Ubuntu 20.04 and 18.04.
   -	Intel(R) Xeon(R) W-2295 CPU @ 3.00GHz. 
-  -	-	2 GPUs Geforce RTX 2080 Ti with 11 GB memory. 
+  -	2 GPUs Geforce RTX 2080 Ti with 11 GB memory. 
+  -	Driver Version 495.29.05
   -	Docker version 20.10.12
   -	Cuda 10.2 and cudnn 7.
-  -	Driver Version 495.29.05
 ## Installation (basic)
 
 This installation step is needed for both Training and Inference steps.
@@ -58,7 +58,7 @@ This installation step is needed for both Training and Inference steps.
 The workflow for training action classification model is as follow:
   1. Dataset preparation <br/>
     - **Trimming Videos** the input videos should be a trimmed videos i.e., contains only one action in each video. <br/>
-    - **Driver Tracking** (pendding) to detect and track driver spatial location in the video, then crop each video based on the driver bounding box. <br/>
+    - **Driver Tracking** (In progress) to detect and track driver spatial location in the video, then crop each video based on the driver bounding box. <br/>
     - **Image Colorization** to increase the size of the dataset, we use one of the synthetic data generation techniques. <br/>
     - **Prepare csv Files** for the training and validation sets.
   2. Download checkpoints from [google drive here](https://drive.google.com/drive/folders/1tN4aTWhPcCjnHzIvaVOjxVsYGfB13L0L?usp=sharing)
@@ -69,7 +69,7 @@ We clean the dataset manually. However, to reproduce nearly same action classifi
 
 
 
-  ### Driver Tracking (pendding) 
+  ### Driver Tracking (In progress) 
  
 <br />
 
@@ -89,14 +89,14 @@ We clean the dataset manually. However, to reproduce nearly same action classifi
   ### Training
   Since action recognition method is data hungry and we only have few samples per class. We have two stages to get the final action classification model.<br />
   1. In the first stage, we train action classification model using only the Infrared video without the synthetic data.  
-  2. In the second stage, we resume training the first stage model but after adding the colored data samples in the train and test csv files.
+  2. In the second stage, we resume training the first stage model but after adding the colored data samples in the train and val csv files.
 
   **Note:** For reproducing rapidly, we recommend skipping the first stage and start from second stage using the first stage checkpoint “checkpoint_epoch_00440.pyth”. please do not change the checkpoint name.
 
   <br />
 
   #### Training setup 
-  After installing the basic libraries in **Installation (basic)**. Type the following command 
+  After installing the basic libraries in **Installation (basic)**. Type the following commands:
   ```bash
   cd slowfast_train 
   git clone https://github.com/facebookresearch/detectron2.git 
@@ -154,8 +154,8 @@ To use TDAL framework and produce the same result in the leaderboard you need to
   ```   
   the videos path directory should be as following structure:
   - vid_path 
-    > Video_1.mp4 <br/>
-    > Video_2.mp4 <br/>
+    - Video_1.mp4 
+    - Video_2.mp4 
   ### Video Segmentation 
   The following command takes untrimmed video as input and generate equal-length clips. To produce the same result in the leaderboard you should use the segmentation type 1 --segmentation_type settings. Type one setting will divide the untrimmed video into (video length in second/2) clips.
   ```bash
@@ -163,19 +163,64 @@ To use TDAL framework and produce the same result in the leaderboard you need to
   ```   
   the videos path directory should be as following structure:
   - file_paths_video  
-    > Video_1.mp4 <br/>
-    > Video_2.mp4 <br/>
+    - Video_1.mp4 
+    - Video_2.mp4 
   
   ### Prepare csv file
+
+  ### Extract features and probabilities
+  After installing the basic libraries in Installation (basic) and preparing csv file. Type the following commands:
+  ```bash
+  cd slowfast_Inference
+  git clone https://github.com/facebookresearch/detectron2.git 
+  pip install cython
+  pip install pandas
+    pip install -e detectron2
+  python setup.py build develop
+  apt-get update
+  apt install libgl1-mesa-glx -y
+  apt-get install libglib2.0-0 -y
+  ``` 
+  To extract the clips probabilities, you need to modify some lines in **“tools/features_extraction.py”**. In lines 125 and 127 specify where you want to save the output files (features and probabilities). If you do not want to save the features for visualization you can remove line 126 and 127. After that run the following command after specifying the path for the test.csv in last step using DATA.PATH_TO_DATA_DIR argument and the checkpoint checkpoint_epoch_00730.pyth using TEST.CHECKPOINT_FILE_PATH argument. If you do not have the checkpoint_epoch_00730.pyth you can download it from [here](https://drive.google.com/drive/folders/1tN4aTWhPcCjnHzIvaVOjxVsYGfB13L0L?usp=sharing)
+
+  ```bash
+  python tools/run_net.py --cfg configs/Kinetics/SLOWFAST_8x8_R50.yaml DATA.PATH_TO_DATA_DIR 'path to the test.csv file' TEST.CHECKPOINT_FILE_PATH checkpoints/checkpoint_epoch_00730.pyth TEST.CHECKPOINT_TYPE pytorch
+  ``` 
+
+  ### Temporal localization
+  To generate the submission file that contains video id, action classes and the start and end time for each action. You need to specify --prob_path and --out_file paths. 
+  ```bash
+  python temporal_loc.py --prob_path 'path to the folder that contains folders of videos probabilities' --out_file 'path to the folder where the temporal locations file to be saved'
+  ``` 
+  The input file structure should be as the following:
+  - prob_path 
+    - Video_1
+      - P_00000.npz
+      - P_00001.npz
+      - P_00002.npz
+      - P_00003.npz
+      - …
+    - Video_2
+      - P_00000.npz
+      - P_00001.npz
+      - P_00002.npz
+      - P_00003.npz
+      - …
+    - …
+
+
 
 ---
 ## Acknowledgement
 This repository depends heavily on [SlowFast](https://github.com/facebookresearch/SlowFast), [YOLOv5](https://github.com/ultralytics/yolov5), and [InstColorization](https://github.com/ericsujw/InstColorization)
 
-      
-## Contact us :
- > If you faced any error please don't hesitate to contact us : <br />
+
+## General Notes 
+- Loading checkpoints from the google drive may take time due to the size of the checkpoint file.
+- We have reproduced the results and run the code on different machines. So, if you find a different results than ours, please contact us to make sure that you do every step as intend it.
+
+##  Contact information 
+If you faced any issues please don't hesitate to contact us :
  > Munirahalyahya21@gmail.com <br />
  > Shahadaalghannam@gmail.com <br />
  > Taghreedalhussan@gmail.com <br />
- > loading checkpoints in the google drive may take time since their are big, and may uploaded after our submission
