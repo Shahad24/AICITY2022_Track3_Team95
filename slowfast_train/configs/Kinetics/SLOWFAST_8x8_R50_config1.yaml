@@ -29,6 +29,9 @@ RESNET:
   NUM_BLOCK_TEMP_KERNEL: [[3, 3], [4, 4], [6, 6], [3, 3]]
   SPATIAL_STRIDES: [[1, 1], [2, 2], [2, 2], [2, 2]]
   SPATIAL_DILATIONS: [[1, 1], [1, 1], [1, 1], [1, 1]]
+AUG:
+   ENABLE: True
+   NUM_SAMPLE: 1
 NONLOCAL:
   LOCATION: [[[], []], [[], []], [[], []], [[], []]]
   GROUP: [[1, 1], [1, 1], [1, 1], [1, 1]]
