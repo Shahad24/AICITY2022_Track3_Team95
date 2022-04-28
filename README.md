@@ -13,7 +13,11 @@ The proposed framework achieves an **F1 score** of **27.06%** on Track 3, **A2 d
 
 ## Framework 
 
-![Framework](https://github.com/Shahad24/AICITY2022_Track3_Team95/blob/main/imgs/Image1.png)
+<p align="center">
+  
+  <img src="https://github.com/Shahad24/AICITY2022_Track3_Team95/blob/main/imgs/Image1.png" width="600" />
+</p>
+ 
 
 ## Development Environment 
 
@@ -106,7 +110,7 @@ Since we clean dataset manually to reproduce near same action classification mod
   
   #### First stage 
 
-  - You need to download “SLOWFAST_8x8_R50.pkl” form [here]()a kinetics 400 dataset pretrained model and move the file to “slowfast_train/checkpoints/SLOWFAST_8x8_R50.pkl”.  <br />
+  - You need to download “SLOWFAST_8x8_R50.pkl” form [here](https://drive.google.com/drive/folders/1tN4aTWhPcCjnHzIvaVOjxVsYGfB13L0L?usp=sharing)a kinetics 400 dataset pretrained model and move the file to “slowfast_train/checkpoints/SLOWFAST_8x8_R50.pkl”.  <br />
   - Use “slowfast_train/configs/Kinetics/SLOWFAST_8x8_R50_config1.yaml” config file and add the checkpoint path if needed. <br />
   - Run the following command 
   ```bash
