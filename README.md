@@ -148,7 +148,7 @@ To use TDAL framework and produce the same result in the leaderboard you need to
   pip install -r requirements.txt
   apt-get update && apt-get upgrade -y && apt-get update && apt install libgl1-mesa-glx -y && apt-get install libglib2.0-0 -y
   ```   
-  2. 2-	Run the following command after specifying the videos path directory “--vid_path”.
+  2. Run the following command after specifying the videos path directory “--vid_path”.
   ```bash
   python yolov5/driver_tracking.py --vid_path 'specify videos path based on the workspace'  --out_file 'specify the path of output videos based on the workspace'
   ```   
