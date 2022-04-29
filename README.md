@@ -1,7 +1,7 @@
 # Temporal Driver Action Localization using Action Classification Methods (TDAL)
 This repository includes the implementation of the TDAL framework, a solution for Track 3 Naturalistic Driving Action Recognition of the [NVIDIA AI City 2022 Challenge](https://www.aicitychallenge.org/). The proposed TDAL framework achieves an F1 score of 27.06% in this challenge. <br />
 
-**Important Note: ** <br />
+**Important Note:** <br />
 For reproducibility, you must use all the code provided in this repo. Using any files from the different version may give different results (e.g., git clone yolov5 from the official repository)  <br />
 
 ## Overview 
