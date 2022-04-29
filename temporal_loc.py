@@ -145,6 +145,9 @@ for k in Prob_folder:
     for i in vid_ids: # if video from A2 to match the required format :)  
         if vid_ids[i] == vid_name:
             vid_id = i
+            
+    if vid_id == -1 : # if the video not from A2, rather than write IDm will write it's name
+           vid_id =  vid_name
 
     
     x = []
