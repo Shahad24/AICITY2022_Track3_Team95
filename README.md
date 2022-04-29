@@ -59,7 +59,7 @@ The workflow for training action classification model is as follow:
     - **Driver Tracking** (In progress) to detect and track driver spatial location in the video, then crop each video based on the driver bounding box. <br/>
     - **Image Colorization** to increase the size of the dataset, we use one of the synthetic data generation techniques. <br/>
     - **Prepare csv Files** for the training and validation sets.
-  2. Download checkpoints from [google drive here](https://drive.google.com/drive/folders/1tN4aTWhPcCjnHzIvaVOjxVsYGfB13L0L?usp=sharing)
+  2. Download checkpoints from [here](https://drive.google.com/drive/folders/1tN4aTWhPcCjnHzIvaVOjxVsYGfB13L0L?usp=sharing)
   3. Prepare the configuration file and start training.
 
 **Important Note:** We clean the dataset manually. However, to reproduce nearly same action classification model you can download the processed data from the google drive link that we sent via email (note this only for authorized people from organizer of AI city challenge). Then you can start from preparing csv file **step** for the training.<br />
@@ -79,8 +79,6 @@ The workflow for training action classification model is as follow:
     - path_to_video_2 label_2
   - The CSV files must be moved to data folder in slowfast_train folder. At the end, you should have the following: <br />
     - slowfast_train/data/train.csv ,  slowfast_train/data/val.csv
-    
-    
   ---
   ### Training
   Since action recognition method is data hungry and we only have few samples per class. We have two stages to get the final action classification model.<br />
@@ -88,8 +86,6 @@ The workflow for training action classification model is as follow:
   2. In the second stage, we resume training the first stage model but after adding the synthetic data (colored data) samples in the train and val csv files.
 
   **Note:** For reproducing rapidly, we recommend skipping the first stage and start from second stage using the first stage checkpoint [“checkpoint_epoch_00440.pyth”](https://drive.google.com/drive/folders/1tN4aTWhPcCjnHzIvaVOjxVsYGfB13L0L?usp=sharing). Please do not change the checkpoint name.
-
-  <br />
 
   #### Training setup 
   After installing the basic libraries in **Installation (basic)**. Type the following commands:
@@ -181,7 +177,7 @@ To use TDAL framework and produce the same result in the leaderboard you need to
   apt install libgl1-mesa-glx -y
   apt-get install libglib2.0-0 -y
   ``` 
-  To extract the clips features and probabilities, you need to modify some lines in **“tools/features_extraction.py”**. In lines 125 and 127 specify where you want to save the output files (features and probabilities). If you do not want to save the features for visualization you can remove line 126 and 127. After that run the following command after specifying the path for the test.csv in last step using DATA.PATH_TO_DATA_DIR argument and the checkpoint checkpoint_epoch_00730.pyth using TEST.CHECKPOINT_FILE_PATH argument. If you do not have the checkpoint_epoch_00730.pyth you can download it from [google drive here](https://drive.google.com/drive/folders/1tN4aTWhPcCjnHzIvaVOjxVsYGfB13L0L?usp=sharing)
+  To extract the clips features and probabilities, you need to modify some lines in **“tools/features_extraction.py”**. In lines 125 and 127 specify where you want to save the output files (features and probabilities). If you do not want to save the features for visualization you can remove line 126 and 127. After that run the following command after specifying the path for the test.csv in last step using DATA.PATH_TO_DATA_DIR argument and the checkpoint checkpoint_epoch_00730.pyth using TEST.CHECKPOINT_FILE_PATH argument. If you do not have the checkpoint_epoch_00730.pyth you can download it from [here](https://drive.google.com/drive/folders/1tN4aTWhPcCjnHzIvaVOjxVsYGfB13L0L?usp=sharing)
 
   ```bash
   python tools/run_net.py --cfg configs/Kinetics/SLOWFAST_8x8_R50.yaml DATA.PATH_TO_DATA_DIR 'path to the test.csv file' TEST.CHECKPOINT_FILE_PATH checkpoints/checkpoint_epoch_00730.pyth TEST.CHECKPOINT_TYPE pytorch
