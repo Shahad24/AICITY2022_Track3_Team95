@@ -1,15 +1,13 @@
 # Temporal Driver Action Localization using Action Classification Methods (TDAL)
 This repository includes the implementation of the TDAL framework, a solution for Track 3 Naturalistic Driving Action Recognition of the [NVIDIA AI City 2022 Challenge](https://www.aicitychallenge.org/). The proposed TDAL framework achieves an F1 score of 27.06% in this challenge. <br />
 
-**Important Note:** <br />
+**Important Note: ** <br />
 For reproducibility, you must use all the code provided in this repo. Using any files from the different version may give different results (e.g., git clone yolov5 from the official repository)  <br />
 
 ## Overview 
 
 Temporal driver action localization (TDAL) framework aims to classify driver distraction actions to 18 classes, as well as identifying the start and end time of a given driver action. The TDAL framework consists of three stages: 
-**Preprocessing**, , which takes untrimmed video as input and generates multiple clips; **Action Classification**, which classifies the clips; and finally, the classifier output is sent to the **Temporal Action Localization** to generate the start and end times of the distracted actions. <br />
-<br />
-The proposed framework achieves an **F1 score** of **27.06%** on [Track 3, **A2 dataset**](https://arxiv.org/abs/2204.08096) of NVIDIA AI City 2022 Challenge. Our paper will be available soon in CVPR workshops 2022. 
+**Preprocessing**, , which takes untrimmed video as input and generates multiple clips; **Action Classification**, which classifies the clips; and finally, the classifier output is sent to the **Temporal Action Localization** to generate the start and end times of the distracted actions. The proposed framework achieves an **F1 score** of **27.06%** on [Track 3, **A2 dataset**](https://arxiv.org/abs/2204.08096) of NVIDIA AI City 2022 Challenge. Our paper will be available soon in CVPR workshops 2022. 
 
 ## Framework 
 
@@ -64,34 +62,32 @@ The workflow for training action classification model is as follow:
   2. Download checkpoints from [google drive here](https://drive.google.com/drive/folders/1tN4aTWhPcCjnHzIvaVOjxVsYGfB13L0L?usp=sharing)
   3. Prepare the configuration file and start training.
 
-**Important Note:** <br />
-We clean the dataset manually. However, to reproduce nearly same action classification model you can download the processed data from the google drive link that we sent via email (note this only for authorized people from organizer of AI city challenge). Then you can start from preparing csv files for the training.<br />
-
-
+**Important Note:** We clean the dataset manually. However, to reproduce nearly same action classification model you can download the processed data from the google drive link that we sent via email (note this only for authorized people from organizer of AI city challenge). Then you can start from preparing csv file **step** for the training.<br />
 
   ### Driver Tracking (In progress) 
  
 <br />
 
   ### Image Colorization
-  To increase the size of the training data set, we perform image colorization [InstColorization](https://github.com/ericsujw/InstColorization) on the entire data from the previous step. We used 'coco_finetuned_mask_256_ffs' checkpoint. Please follow the instruction in [InstColorization](https://github.com/ericsujw/InstColorization) to get the same results.
+  To increase the size of the training dataset, we perform image colorization [InstColorization](https://github.com/ericsujw/InstColorization) on the entire data from the previous step. We used 'coco_finetuned_mask_256_ffs' checkpoint. Please follow the instruction in [InstColorization](https://github.com/ericsujw/InstColorization) to get the same results.
 <br />
 
   ### Prepare csv Files
   To train [SlowFast](https://github.com/facebookresearch/SlowFast), we need to prepare the dataset to match their format (for more information see [SlowFast kinetics Dataset](https://github.com/facebookresearch/SlowFast/blob/main/slowfast/datasets/DATASET.md)) <br />
   - The dataset information should be stored in CSV file without header, must following the below format.
-    > path_to_video_1 label_1
+    - path_to_video_1 label_1
+    - path_to_video_2 label_2
   - The CSV files must be moved to data folder in slowfast_train folder. At the end, you should have the following: <br />
-    > slowfast_train/data/train.csv ,  slowfast_train/data/val.csv
+    - slowfast_train/data/train.csv ,  slowfast_train/data/val.csv
     
     
   ---
   ### Training
   Since action recognition method is data hungry and we only have few samples per class. We have two stages to get the final action classification model.<br />
-  1. In the first stage, we train action classification model using only the Infrared video without the synthetic data.  
-  2. In the second stage, we resume training the first stage model but after adding the colored data samples in the train and val csv files.
+  1. In the first stage, we train action classification model using only the Infrared video without the synthetic data (colored data).  
+  2. In the second stage, we resume training the first stage model but after adding the synthetic data (colored data) samples in the train and val csv files.
 
-  **Note:** For reproducing rapidly, we recommend skipping the first stage and start from second stage using the first stage checkpoint “checkpoint_epoch_00440.pyth”. please do not change the checkpoint name.
+  **Note:** For reproducing rapidly, we recommend skipping the first stage and start from second stage using the first stage checkpoint [“checkpoint_epoch_00440.pyth”](https://drive.google.com/drive/folders/1tN4aTWhPcCjnHzIvaVOjxVsYGfB13L0L?usp=sharing). Please do not change the checkpoint name.
 
   <br />
 
@@ -120,7 +116,7 @@ We clean the dataset manually. However, to reproduce nearly same action classifi
   
   #### Second stage 
 
-  - You need either to download “checkpoint_epoch_00440.pyth” pretrained model on the IR video samples or use the last model in the first stage. Then, move the file to “slowfast_train/checkpoints/“checkpoint_epoch_00440.pyth”. <br />
+  - You need either to download “checkpoint_epoch_00440.pyth” from [here](https://drive.google.com/drive/folders/1tN4aTWhPcCjnHzIvaVOjxVsYGfB13L0L?usp=sharing) pretrained model on the IR video samples or use the last model in the first stage. Then, move the file to “slowfast_train/checkpoints/“checkpoint_epoch_00440.pyth”. <br />
   - Use  “slowfast_train/configs/Kinetics/SLOWFAST_8x8_R50_config2.yaml” config file and add the checkpoint path if needed. <br />
   - Run the following command 
   ```bash
@@ -129,12 +125,12 @@ We clean the dataset manually. However, to reproduce nearly same action classifi
  ---
 ## Inference 
 To use TDAL framework and produce the same result in the leaderboard you need to follow the following steps:
-1. Dataset preparation
-  - Driver tracking to detect and track driver spatial location in the video then crop each video based on the driver bounding box.
-  - Video segmentation to divide the untrimmed video into equal-length clips.
-  - Prepare csv file for the feature and classes probabilities extraction.
-2. Extracting action clips probabilities.   
-3. Temporal localization to get the start and end time for each predicted distracted action in an untrimmed video. 
+  1. Dataset preparation
+    - Driver tracking to detect and track driver spatial location in the video then crop each video based on the driver bounding box.
+    - Video segmentation to divide the untrimmed video into equal-length clips.
+    - Prepare csv file for the feature and classes probabilities extraction.
+  2. Extracting action clips probabilities.   
+  3. Temporal localization to get the start and end time for each predicted distracted action in an untrimmed video. 
 
 
   ### Driver Tracking
@@ -152,7 +148,7 @@ To use TDAL framework and produce the same result in the leaderboard you need to
   ```bash
   python yolov5/driver_tracking.py --vid_path 'specify videos path based on the workspace'  --out_file 'specify the path of output videos based on the workspace'
   ```   
-  the videos path directory should be as following structure:
+  the videos path directory should be as the following structure:
   - vid_path 
     - Video_1.mp4 
     - Video_2.mp4 
@@ -161,32 +157,31 @@ To use TDAL framework and produce the same result in the leaderboard you need to
   ```bash
   python videoSegmentation.py --file_paths_video 'path to the root of folders that contains videos' --out_file 'specify the output path' --segmentation_type 1
   ```   
-  the videos path directory should be as following structure:
+  the videos path directory should be as the following structure:
   - file_paths_video  
     - Video_1.mp4 
     - Video_2.mp4 
   
   ### Prepare csv file
-  After completing the video segmentation step, you need to generate a csv file for video's segments. The csv file should contain all clips paths for a single video sorted **in ascending order** with dummy labels. If the order of paths is changed then it will result in an unexpected and wrong results in last stage. You can use **“makeData.py”** for that.  But you need change the path in line 14 to the required clips video path.  Also, you need to change the path in line 32 to appropriate path where you want to save the csv file. 
-  - Please the csv file must be named test.csv. We use a docker container in the next step, so you need to check that the paths are appropriate with respect to docker container. In line 26 we have replaced a part of the path with the name of the mapped path in the docker container.
+  After completing the video segmentation step, you need to generate a csv file for video's clips. The csv file should contain all clips paths for a single video sorted **in ascending order** with dummy labels. If the order of paths is changed then it will result in an unexpected and wrong results in last stage. You can use **“makeData.py”** for that.  But you need to replace the path in line 14 to the required clips video path.  Also, you need to replace the path in line 32 to appropriate path where you want to save the csv file. **Please the csv file must be named test.csv. We use a docker container in the next step, so you need to check that the paths are appropriate with respect to docker container. In line 26 we have replaced a part of the path with the name of the mapped path in the docker container.**
   ```bash
   python makeData.py
   ``` 
 
   ### Extract features and probabilities
-  After installing the basic libraries in Installation (basic) and preparing csv file. Type the following commands:
+  After installing the basic libraries in **Installation (basic)** and preparing csv file. Type the following commands:
   ```bash
   cd slowfast_Inference
   git clone https://github.com/facebookresearch/detectron2.git 
   pip install cython
   pip install pandas
-    pip install -e detectron2
+  pip install -e detectron2
   python setup.py build develop
   apt-get update
   apt install libgl1-mesa-glx -y
   apt-get install libglib2.0-0 -y
   ``` 
-  To extract the clips probabilities, you need to modify some lines in **“tools/features_extraction.py”**. In lines 125 and 127 specify where you want to save the output files (features and probabilities). If you do not want to save the features for visualization you can remove line 126 and 127. After that run the following command after specifying the path for the test.csv in last step using DATA.PATH_TO_DATA_DIR argument and the checkpoint checkpoint_epoch_00730.pyth using TEST.CHECKPOINT_FILE_PATH argument. If you do not have the checkpoint_epoch_00730.pyth you can download it from [google drive here](https://drive.google.com/drive/folders/1tN4aTWhPcCjnHzIvaVOjxVsYGfB13L0L?usp=sharing)
+  To extract the clips features and probabilities, you need to modify some lines in **“tools/features_extraction.py”**. In lines 125 and 127 specify where you want to save the output files (features and probabilities). If you do not want to save the features for visualization you can remove line 126 and 127. After that run the following command after specifying the path for the test.csv in last step using DATA.PATH_TO_DATA_DIR argument and the checkpoint checkpoint_epoch_00730.pyth using TEST.CHECKPOINT_FILE_PATH argument. If you do not have the checkpoint_epoch_00730.pyth you can download it from [google drive here](https://drive.google.com/drive/folders/1tN4aTWhPcCjnHzIvaVOjxVsYGfB13L0L?usp=sharing)
 
   ```bash
   python tools/run_net.py --cfg configs/Kinetics/SLOWFAST_8x8_R50.yaml DATA.PATH_TO_DATA_DIR 'path to the test.csv file' TEST.CHECKPOINT_FILE_PATH checkpoints/checkpoint_epoch_00730.pyth TEST.CHECKPOINT_TYPE pytorch
