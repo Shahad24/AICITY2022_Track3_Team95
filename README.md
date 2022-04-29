@@ -167,6 +167,11 @@ To use TDAL framework and produce the same result in the leaderboard you need to
     - Video_2.mp4 
   
   ### Prepare csv file
+  After completing the video segmentation step, you need to generate a csv file for video's segments. The csv file should contain all clips paths for a single video sorted **in ascending order** with dummy labels. If the order of paths is changed then it will result in an unexpected and wrong results in last stage. You can use **“makeData.py”** for that.  But you need change the path in line 14 to the required clips video path.  Also, you need to change the path in line 32 to appropriate path where you want to save the csv file. 
+  - Please the csv file must be named test.csv. We use a docker container in the next step, so you need to check that the paths are appropriate with respect to docker container. In line 26 we have replaced a part of the path with the name of the mapped path in the docker container.
+  ```bash
+  python makeData.py
+  ``` 
 
   ### Extract features and probabilities
   After installing the basic libraries in Installation (basic) and preparing csv file. Type the following commands:
