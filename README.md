@@ -153,7 +153,7 @@ To use TDAL framework and produce the same result in the leaderboard you need to
     - Video_1.mp4 
     - Video_2.mp4 
   ### Video Segmentation 
-  The following command takes untrimmed video as input and generate equal-length clips. To produce the same result in the leaderboard you should use the segmentation type 1 --segmentation_type settings. Type one setting will divide the untrimmed video into (video length in second/2) clips.
+  The following command takes untrimmed video as input and generate equal-length clips. To produce the same result in the leaderboard you should use the segmentation type 1 settings. Type one setting will divide the untrimmed video into (video length in second/2) clips.
   ```bash
   python videoSegmentation.py --file_paths_video 'path to the root of folders that contains videos' --out_file 'specify the output path' --segmentation_type 1
   ```   
