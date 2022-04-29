@@ -3,7 +3,7 @@
 """
 Created on Thu Apr  7 09:56:27 2022
 
-@author: noura
+@author: Taghreed
 """
 
 from glob import glob
@@ -146,7 +146,7 @@ for k in Prob_folder:
         if vid_ids[i] == vid_name:
             vid_id = i
             
-    if vid_id == -1 : # if the video not from A2, rather than write IDm will write it's name
+    if vid_id == -1 : # if the video not from A2, rather than write ID, will write it's name
            vid_id =  vid_name
 
     
