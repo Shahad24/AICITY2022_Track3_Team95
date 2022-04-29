@@ -188,7 +188,7 @@ To use TDAL framework and produce the same result in the leaderboard you need to
   ``` 
 
   ### Temporal localization
-  To generate the submission file that contains video id, action classes and the start and end time for each action. You need to specify --prob_path and --out_file paths. 
+  To generate the submission file that contains video id, action classes and the start and end time for each action. The temporal_loc.py takes prob_path,  out_file and video_ids.csv as input. prob_path is the path to the folder that contains the videos probabilities. out_file is the path to the folder where the temporal locations txt file to be saved. Finally, video_ids.csv contains the videos names and Ids.
   ```bash
   python temporal_loc.py --prob_path 'path to the folder that contains folders of videos probabilities' --out_file 'path to the folder where the temporal locations file to be saved'
   ``` 
