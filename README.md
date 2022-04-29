@@ -186,7 +186,7 @@ To use TDAL framework and produce the same result in the leaderboard you need to
   apt install libgl1-mesa-glx -y
   apt-get install libglib2.0-0 -y
   ``` 
-  To extract the clips probabilities, you need to modify some lines in **“tools/features_extraction.py”**. In lines 125 and 127 specify where you want to save the output files (features and probabilities). If you do not want to save the features for visualization you can remove line 126 and 127. After that run the following command after specifying the path for the test.csv in last step using DATA.PATH_TO_DATA_DIR argument and the checkpoint checkpoint_epoch_00730.pyth using TEST.CHECKPOINT_FILE_PATH argument. If you do not have the checkpoint_epoch_00730.pyth you can download it from [here](https://drive.google.com/drive/folders/1tN4aTWhPcCjnHzIvaVOjxVsYGfB13L0L?usp=sharing)
+  To extract the clips probabilities, you need to modify some lines in **“tools/features_extraction.py”**. In lines 125 and 127 specify where you want to save the output files (features and probabilities). If you do not want to save the features for visualization you can remove line 126 and 127. After that run the following command after specifying the path for the test.csv in last step using DATA.PATH_TO_DATA_DIR argument and the checkpoint checkpoint_epoch_00730.pyth using TEST.CHECKPOINT_FILE_PATH argument. If you do not have the checkpoint_epoch_00730.pyth you can download it from [google drive here](https://drive.google.com/drive/folders/1tN4aTWhPcCjnHzIvaVOjxVsYGfB13L0L?usp=sharing)
 
   ```bash
   python tools/run_net.py --cfg configs/Kinetics/SLOWFAST_8x8_R50.yaml DATA.PATH_TO_DATA_DIR 'path to the test.csv file' TEST.CHECKPOINT_FILE_PATH checkpoints/checkpoint_epoch_00730.pyth TEST.CHECKPOINT_TYPE pytorch
