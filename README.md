@@ -213,7 +213,7 @@ This repository depends heavily on [SlowFast](https://github.com/facebookresearc
 
 ## General Notes 
 - Loading checkpoints from the google drive may take time due to the size of the checkpoint file.
-- We have reproduced the results and run the code on different machines. So, if you find a different results than ours, please contact us to make sure that you do every step as intend it.
+- We have reproduced the results and run the codes on different machines. So, if you find a different results than ours, please contact us to make sure that you do every step as intend it.
 
 ##  Contact information 
 If you faced any issues please don't hesitate to contact us :
