@@ -116,7 +116,7 @@ The workflow for training action classification model is as follow:
   
   #### Second stage 
 
-  - You need either to download “checkpoint_epoch_00440.pyth” from [here](https://drive.google.com/drive/folders/1tN4aTWhPcCjnHzIvaVOjxVsYGfB13L0L?usp=sharing) pretrained model on the IR video samples or use the last model in the first stage. Then, move the file to “slowfast_train/checkpoints/“checkpoint_epoch_00440.pyth”. <br />
+  - You need either to download “checkpoint_epoch_00440.pyth” pretrained model on the IR video samples from [here](https://drive.google.com/drive/folders/1tN4aTWhPcCjnHzIvaVOjxVsYGfB13L0L?usp=sharing) or use the last model in the first stage. Then, move the file to “slowfast_train/checkpoints/“checkpoint_epoch_00440.pyth”. <br />
   - Use  “slowfast_train/configs/Kinetics/SLOWFAST_8x8_R50_config2.yaml” config file and add the checkpoint path if needed. <br />
   - Run the following command 
   ```bash
