@@ -120,7 +120,7 @@ The workflow for training action classification model is as follow:
   ```  
  ---
 ## Inference 
-To use TDAL framework and produce the same result in the leaderboard you need to follow the following steps:
+To use TDAL framework and produce the same result in the leaderboard you need to **use only the Rear angle view videos** and follow the following steps:
   1. Dataset preparation <br/>
     - **Driver Tracking** to detect and track driver spatial location in the video then crop each video based on the driver bounding box. <br/>
     - **Video Segmentation** to divide the untrimmed video into equal-length clips.<br/>
