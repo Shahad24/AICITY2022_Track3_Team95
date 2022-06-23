@@ -32,7 +32,7 @@ This installation step is needed for both Training and Inference steps.
 
   1. Pull the image and create container for Pytorch 1.8.1, cuda 10.2 and cudnn 7.
   ```bash
-  sudo docker pull 8feef0e83aed
+  sudo docker pull pytorch/pytorch:1.8.1-cuda10.2-cudnn7-runtime
   sudo docker run -it --rm --gpus all --shm-size=40g --name pytorch -v 'your home path':/workspace 8feef0e83aed 
   ```   
   2. Install the following dependencies inside the docker container
